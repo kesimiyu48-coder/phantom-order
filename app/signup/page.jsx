@@ -1,118 +1,156 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function Signup() {
-  const router = useRouter();
-  const [error, setError] = useState("");
+export default function SignupPage() {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [success, setSuccess] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setError("");
-    setLoading(true);
 
-    const name = e.target.name.value;
-    const email = e.target.email.value;
-    const password = e.target.password.value;
+    setMessage("");
+    setSuccess(false);
+
+    if (!form.name || !form.email || !form.password) {
+      setMessage("Please fill in all fields.");
+      return;
+    }
+
+    if (form.password.length < 6) {
+      setMessage("Password must be at least 6 characters.");
+      return;
+    }
 
     try {
+      setLoading(true);
+
       const res = await fetch("/api/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify(form),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || "Signup failed");
-        setLoading(false);
+        setMessage(data.error || "Unable to create account.");
         return;
       }
 
-      // redirect to login after successful signup
-      router.push("/login");
+      setSuccess(true);
+      setMessage("Account created successfully.");
 
-    } catch (err) {
-      setError("Network error. Try again.");
+      setForm({
+        name: "",
+        email: "",
+        password: "",
+      });
+
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 2000);
+    } catch (error) {
+      console.error(error);
+      setMessage(
+        "Unable to connect to the server. Please try again later."
+      );
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black text-white px-6">
+    <main className="min-h-screen bg-black flex items-center justify-center px-6">
+      <div className="w-full max-w-md bg-zinc-900 border border-purple-900 rounded-2xl p-8 shadow-2xl">
 
-      <div className="w-full max-w-md border border-purple-800 bg-black/60 backdrop-blur-md p-8 rounded-2xl">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-black text-purple-400 tracking-wider">
+            PHANTOM ORDER
+          </h1>
 
-        {/* TITLE */}
-        <h1 className="text-3xl font-bold text-purple-400 tracking-widest text-center">
-          JOIN PHANTOM ORDER
-        </h1>
+          <p className="text-gray-400 mt-3">
+            Create Your Account
+          </p>
+        </div>
 
-        <p className="text-center text-gray-400 mt-2 text-sm">
-          CREATE YOUR ACCESS NODE
-        </p>
-
-        {/* FORM */}
-        <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
 
           <input
-            name="name"
             type="text"
             placeholder="Full Name"
-            className="w-full p-3 bg-black border border-purple-700 rounded-lg focus:outline-none focus:border-purple-400"
-            required
+            value={form.name}
+            onChange={(e) =>
+              setForm({ ...form, name: e.target.value })
+            }
+            className="w-full p-3 rounded-lg bg-black border border-zinc-700 text-white outline-none focus:border-purple-500"
           />
 
           <input
-            name="email"
             type="email"
-            placeholder="Email"
-            className="w-full p-3 bg-black border border-purple-700 rounded-lg focus:outline-none focus:border-purple-400"
-            required
+            placeholder="Email Address"
+            value={form.email}
+            onChange={(e) =>
+              setForm({ ...form, email: e.target.value })
+            }
+            className="w-full p-3 rounded-lg bg-black border border-zinc-700 text-white outline-none focus:border-purple-500"
           />
 
           <input
-            name="password"
             type="password"
             placeholder="Password"
-            className="w-full p-3 bg-black border border-purple-700 rounded-lg focus:outline-none focus:border-purple-400"
-            required
+            value={form.password}
+            onChange={(e) =>
+              setForm({ ...form, password: e.target.value })
+            }
+            className="w-full p-3 rounded-lg bg-black border border-zinc-700 text-white outline-none focus:border-purple-500"
           />
 
-          {/* ERROR */}
-          {error && (
-            <p className="text-red-500 text-sm">{error}</p>
+          {message && (
+            <div
+              className={`p-3 rounded-lg text-sm ${
+                success
+                  ? "bg-green-900/30 text-green-400 border border-green-700"
+                  : "bg-red-900/30 text-red-400 border border-red-700"
+              }`}
+            >
+              {message}
+            </div>
           )}
 
-          {/* SUBMIT BUTTON */}
           <button
+            type="submit"
             disabled={loading}
-            className="w-full bg-purple-600 hover:bg-purple-700 py-3 rounded-lg font-semibold transition"
+            className="w-full py-3 rounded-lg bg-purple-600 hover:bg-purple-700 transition font-semibold"
           >
-            {loading ? "CREATING ACCOUNT..." : "CREATE ACCOUNT"}
+            {loading ? "Creating Account..." : "Create Account"}
           </button>
 
         </form>
 
-        {/* REDIRECTION LINK (STEP 2 FEATURE) */}
-        <div className="mt-6 text-center text-sm text-gray-400">
-          Already have an account?{" "}
+        <div className="text-center mt-6">
+          <p className="text-gray-400">
+            Already have an account?
+          </p>
+
           <Link
             href="/login"
-            className="text-purple-400 hover:underline"
+            className="text-purple-400 hover:text-purple-300 font-semibold"
           >
-            Login
+            Login Here
           </Link>
         </div>
-
       </div>
-    </div>
+    </main>
   );
 }
