@@ -1,89 +1,40 @@
 export default function JoinSection() {
   return (
-    <section
-      id="join"
-      className="mx-auto max-w-5xl px-6 py-24"
-    >
-      <div
-        className="
-          rounded-3xl
-          border
-          border-purple-800
-          bg-black/40
-          backdrop-blur-md
-          p-10
-          text-center
-        "
-      >
-        <p className="text-purple-400 tracking-[0.3em] uppercase text-sm">
-          Recruitment
-        </p>
+    <section className="py-20 bg-black text-white text-center px-6">
 
-        <h2 className="mt-4 text-4xl md:text-5xl font-bold">
-          Join The Order
-        </h2>
+      <h2 className="text-3xl md:text-5xl font-bold text-purple-400">
+        JOIN THE NETWORK
+      </h2>
 
-        <p className="mt-6 text-gray-300 max-w-2xl mx-auto">
-          Phantom Order seeks loyal, active, and disciplined
-          individuals willing to contribute to the growth and
-          strength of the organization.
-        </p>
+      <p className="mt-4 text-gray-400 max-w-xl mx-auto">
+        Connect with Phantom Order across secure communication channels.
+      </p>
 
-        <div className="mt-10 grid md:grid-cols-2 gap-6 text-left">
+      {/* BUTTONS */}
+      <div className="mt-10 flex flex-wrap justify-center gap-6">
 
-          <div className="rounded-xl border border-purple-900 p-6">
-            <h3 className="text-purple-300 font-bold text-lg">
-              Requirements
-            </h3>
-
-            <ul className="mt-4 space-y-2 text-gray-400">
-              <li>✓ Active Discord Member</li>
-              <li>✓ Respectful Conduct</li>
-              <li>✓ Loyalty to the Order</li>
-              <li>✓ Willingness to Learn</li>
-              <li>✓ Teamwork & Discipline</li>
-            </ul>
-          </div>
-
-          <div className="rounded-xl border border-purple-900 p-6">
-            <h3 className="text-purple-300 font-bold text-lg">
-              Benefits
-            </h3>
-
-            <ul className="mt-4 space-y-2 text-gray-400">
-              <li>✓ Structured Rank Progression</li>
-              <li>✓ Leadership Opportunities</li>
-              <li>✓ Exclusive Events</li>
-              <li>✓ Community Recognition</li>
-              <li>✓ Department Participation</li>
-            </ul>
-          </div>
-
-        </div>
-
+        {/* DISCORD */}
         <a
-          href="https://discord.gg/YOUR_INVITE"
+          href="https://discord.gg/nYzmMdPj4"
           target="_blank"
           rel="noopener noreferrer"
-          className="
-            inline-block
-            mt-10
-            rounded-xl
-            border
-            border-purple-500
-            bg-purple-500/10
-            px-8
-            py-4
-            font-bold
-            hover:bg-purple-700
-            hover:shadow-[0_0_30px_rgba(168,85,247,.8)]
-            transition
-          "
+          className="px-8 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 transition font-semibold shadow-lg"
         >
-          JOIN OUR DISCORD
+          JOIN DISCORD
+        </a>
+
+        {/* WHATSAPP */}
+        <a
+          href="https://chat.whatsapp.com/KW1WB9T1Bm2BxdZW29O5XY"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-8 py-3 rounded-xl bg-green-600 hover:bg-green-700 transition font-semibold shadow-lg"
+        >
+          JOIN WHATSAPP
         </a>
 
       </div>
+
     </section>
   );
 }

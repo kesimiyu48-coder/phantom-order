@@ -6,27 +6,42 @@ export default function Hero() {
         backgroundImage: "url('/phantom-bg.jpg')",
       }}
     >
-      {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-black/60" />
+      {/* Background Overlay */}
+      <div className="absolute inset-0 bg-black/70" />
 
-      {/* Purple Glow Overlay */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(168,85,247,.25),transparent_60%)]" />
+      {/* Purple Core Glow */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(168,85,247,.35),transparent_60%)]" />
 
-      {/* Content */}
-      <div className="relative z-10 text-center px-6 max-w-4xl">
+      {/* Animated Grid */}
+      <div
+        className="
+          absolute inset-0 opacity-10
+          bg-[linear-gradient(rgba(168,85,247,.25)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,.25)_1px,transparent_1px)]
+          bg-[size:50px_50px]
+        "
+      />
 
-        <p className="mb-4 text-purple-300 tracking-[0.4em] uppercase text-sm md:text-base">
+      <div className="relative z-10 text-center px-6 max-w-5xl">
+
+        <p className="mb-4 text-purple-300 tracking-[0.5em] uppercase text-sm md:text-base">
           Initiative Classified
         </p>
 
         <h1
           className="
-            text-5xl
-            md:text-7xl
-            lg:text-8xl
+            font-[var(--font-orbitron)]
+            text-3xl
+            md:text-5xl
+            lg:text-6xl
             font-black
-            text-purple-300
-            drop-shadow-[0_0_40px_rgba(168,85,247,1)]
+            tracking-[0.25em]
+            text-transparent
+            bg-gradient-to-r
+            from-purple-200
+            via-purple-400
+            to-purple-200
+            bg-clip-text
+            drop-shadow-[0_0_50px_rgba(168,85,247,1)]
           "
         >
           PHANTOM ORDER
@@ -41,7 +56,7 @@ export default function Hero() {
             text-purple-200
           "
         >
-          INVISIBLE • UNYIELDING • ORDER
+          POWER • LOYALTY • LEGACY
         </p>
 
         <p
@@ -50,22 +65,24 @@ export default function Hero() {
             text-gray-300
             max-w-2xl
             mx-auto
+            text-lg
           "
         >
-          We are the unseen force.
-          We do not seek power.
-          We execute purpose.
-          Bound by loyalty, discipline, and unity.
+          A unified order built upon discipline,
+          strategy, leadership, and unwavering loyalty.
+          Every member serves a purpose.
+          Every action shapes the future.
         </p>
 
         <div className="mt-10 flex flex-wrap justify-center gap-4">
 
-          <button
+          <a
+            href="#join"
             className="
               rounded-xl
               border
               border-purple-500
-              bg-purple-500/10
+              bg-purple-500/20
               px-8
               py-3
               font-semibold
@@ -75,9 +92,10 @@ export default function Hero() {
             "
           >
             JOIN THE ORDER
-          </button>
+          </a>
 
-          <button
+          <a
+            href="#departments"
             className="
               rounded-xl
               border
@@ -91,21 +109,45 @@ export default function Hero() {
             "
           >
             EXPLORE
-          </button>
+          </a>
 
         </div>
 
-        {/* Status Panel */}
-        <div className="mt-12 mx-auto max-w-md rounded-xl border border-purple-800 bg-black/40 p-4 backdrop-blur-md">
-          <p className="text-purple-300 text-sm">
-            SYSTEM STATUS: ONLINE
-          </p>
-          <p className="text-gray-400 text-xs mt-2">
-            P.O. PROTOCOL // 7A
-          </p>
-          <p className="text-gray-400 text-xs">
-            CLEARANCE: OMEGA
-          </p>
+        {/* Command Terminal */}
+        <div className="mt-14 mx-auto max-w-lg rounded-2xl border border-purple-800 bg-black/50 p-5 backdrop-blur-md">
+
+          <div className="flex justify-between text-xs text-purple-400">
+            <span>NETWORK STATUS</span>
+            <span>ONLINE</span>
+          </div>
+
+          <div className="mt-4 h-px bg-purple-800" />
+
+          <div className="mt-4 space-y-2 text-left text-sm">
+
+            <p className="text-green-400">
+              ● CORE SYSTEMS ACTIVE
+            </p>
+
+            <p className="text-green-400">
+              ● DEPARTMENTS SYNCHRONIZED
+            </p>
+
+            <p className="text-green-400">
+              ● CLEARANCE LEVEL: OMEGA
+            </p>
+
+            <p className="text-purple-300">
+              PHANTOM ORDER COMMAND NODE READY
+            </p>
+
+          </div>
+
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="mt-16 animate-bounce text-purple-400 text-sm tracking-widest">
+          ▼ SCROLL ▼
         </div>
 
       </div>

@@ -1,37 +1,40 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Dashboard() {
-  const [users, setUsers] = useState([]);
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
-    fetch("/api/users")
-      .then((res) => res.json())
-      .then(setUsers);
-  }, []);
+    if (status === "unauthenticated") {
+      router.push("/login");
+    }
+  }, [status]);
+
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black text-purple-400">
+        LOADING USER NODE...
+      </div>
+    );
+  }
 
   return (
-    <div style={{ color: "white", padding: "40px" }}>
-      <h1>🔥 Phantom Order Admin Panel</h1>
+    <div className="min-h-screen bg-black text-white p-10">
+      <h1 className="text-4xl font-bold text-purple-400">
+        USER DASHBOARD
+      </h1>
 
-      <h2 style={{ marginTop: "20px" }}>👥 Members</h2>
+      <p className="mt-4 text-gray-300">
+        Welcome, {session?.user?.name || session?.user?.email}
+      </p>
 
-      <div>
-        {users.map((user) => (
-          <div
-            key={user.id}
-            style={{
-              border: "1px solid purple",
-              padding: "10px",
-              marginTop: "10px",
-            }}
-          >
-            <p>Name: {user.name}</p>
-            <p>Email: {user.email}</p>
-            <p>Role: {user.role}</p>
-          </div>
-        ))}
+      <div className="mt-6 border border-purple-800 p-6 rounded-xl">
+        <p><b>Email:</b> {session?.user?.email}</p>
+        <p><b>Role:</b> {session?.user?.role}</p>
       </div>
     </div>
   );

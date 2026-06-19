@@ -7,10 +7,6 @@ export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "credentials",
-      credentials: {
-        email: {},
-        password: {},
-      },
 
       async authorize(credentials) {
         const user = await prisma.user.findUnique({
@@ -19,21 +15,26 @@ export const authOptions = {
 
         if (!user) return null;
 
-        const isValid = await bcrypt.compare(
+        const valid = await bcrypt.compare(
           credentials.password,
           user.password
         );
 
-        if (!isValid) return null;
+        if (!valid) return null;
 
         return {
           id: user.id,
           email: user.email,
+          name: user.name,
           role: user.role,
         };
       },
     }),
   ],
+
+  session: {
+    strategy: "jwt",
+  },
 
   callbacks: {
     async jwt({ token, user }) {
@@ -45,8 +46,8 @@ export const authOptions = {
     },
 
     async session({ session, token }) {
-      session.user.role = token.role;
       session.user.id = token.id;
+      session.user.role = token.role;
       return session;
     },
   },
@@ -54,9 +55,8 @@ export const authOptions = {
   pages: {
     signIn: "/login",
   },
-
-  secret: process.env.NEXTAUTH_SECRET,
 };
 
 const handler = NextAuth(authOptions);
+
 export { handler as GET, handler as POST };

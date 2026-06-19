@@ -1,61 +1,117 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Signup() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const router = useRouter();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSignup = async () => {
-    const handleSubmit = (e) => {
-  e.preventDefault();
-  alert("Registration system coming soon.");
-};  {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, email, password }),
-    });
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
-    const data = await res.json();
-    console.log(data);
-  };
+    const name = e.target.name.value;
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+
+    try {
+      const res = await fetch("/api/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Signup failed");
+        setLoading(false);
+        return;
+      }
+
+      // redirect to login after successful signup
+      router.push("/login");
+
+    } catch (err) {
+      setError("Network error. Try again.");
+    }
+
+    setLoading(false);
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black text-white">
-      <div className="w-full max-w-md p-8 rounded-2xl border border-purple-700/40 bg-black/60 backdrop-blur-xl shadow-[0_0_30px_rgba(168,85,247,0.2)]">
-        
-        <h1 className="text-3xl font-bold text-purple-400 text-center mb-6">
-          Join Phantom Order
+    <div className="min-h-screen flex items-center justify-center bg-black text-white px-6">
+
+      <div className="w-full max-w-md border border-purple-800 bg-black/60 backdrop-blur-md p-8 rounded-2xl">
+
+        {/* TITLE */}
+        <h1 className="text-3xl font-bold text-purple-400 tracking-widest text-center">
+          JOIN PHANTOM ORDER
         </h1>
 
-        <input
-          className="w-full mb-3 p-3 rounded bg-black border border-purple-700/40"
-          placeholder="Name"
-          onChange={(e) => setName(e.target.value)}
-        />
+        <p className="text-center text-gray-400 mt-2 text-sm">
+          CREATE YOUR ACCESS NODE
+        </p>
 
-        <input
-          className="w-full mb-3 p-3 rounded bg-black border border-purple-700/40"
-          placeholder="Email"
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        {/* FORM */}
+        <form onSubmit={handleSubmit} className="mt-8 space-y-4">
 
-        <input
-          className="w-full mb-5 p-3 rounded bg-black border border-purple-700/40"
-          type="password"
-          placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
+          <input
+            name="name"
+            type="text"
+            placeholder="Full Name"
+            className="w-full p-3 bg-black border border-purple-700 rounded-lg focus:outline-none focus:border-purple-400"
+            required
+          />
 
-        <button
-          onClick={handleSignup}
-          className="w-full py-3 bg-purple-600 hover:bg-purple-700 transition rounded font-semibold"
-        >
-          Sign Up
-        </button>
+          <input
+            name="email"
+            type="email"
+            placeholder="Email"
+            className="w-full p-3 bg-black border border-purple-700 rounded-lg focus:outline-none focus:border-purple-400"
+            required
+          />
+
+          <input
+            name="password"
+            type="password"
+            placeholder="Password"
+            className="w-full p-3 bg-black border border-purple-700 rounded-lg focus:outline-none focus:border-purple-400"
+            required
+          />
+
+          {/* ERROR */}
+          {error && (
+            <p className="text-red-500 text-sm">{error}</p>
+          )}
+
+          {/* SUBMIT BUTTON */}
+          <button
+            disabled={loading}
+            className="w-full bg-purple-600 hover:bg-purple-700 py-3 rounded-lg font-semibold transition"
+          >
+            {loading ? "CREATING ACCOUNT..." : "CREATE ACCOUNT"}
+          </button>
+
+        </form>
+
+        {/* REDIRECTION LINK (STEP 2 FEATURE) */}
+        <div className="mt-6 text-center text-sm text-gray-400">
+          Already have an account?{" "}
+          <Link
+            href="/login"
+            className="text-purple-400 hover:underline"
+          >
+            Login
+          </Link>
+        </div>
+
       </div>
     </div>
   );
