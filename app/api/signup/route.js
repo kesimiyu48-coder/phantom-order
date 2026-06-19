@@ -3,9 +3,24 @@ import bcrypt from "bcryptjs";
 
 export async function POST(req) {
   try {
-    const { name, email, password } = await req.json();
+    const body = await req.json().catch(() => null);
 
-    // 1. Check if user exists
+    if (!body) {
+      return Response.json(
+        { error: "Invalid request body" },
+        { status: 400 }
+      );
+    }
+
+    const { name, email, password } = body;
+
+    if (!email || !password) {
+      return Response.json(
+        { error: "Email and password required" },
+        { status: 400 }
+      );
+    }
+
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
@@ -17,13 +32,11 @@ export async function POST(req) {
       );
     }
 
-    // 2. Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // 3. Create user
     const user = await prisma.user.create({
       data: {
-        name,
+        name: name || "User",
         email,
         password: hashedPassword,
         role: "user",
@@ -39,9 +52,10 @@ export async function POST(req) {
       },
     });
   } catch (error) {
-    console.error(error);
+    console.error("SIGNUP ERROR:", error);
+
     return Response.json(
-      { error: "Server error" },
+      { error: "Server error", details: error.message },
       { status: 500 }
     );
   }
