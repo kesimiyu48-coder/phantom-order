@@ -8,7 +8,10 @@ export default function Signup() {
   const [password, setPassword] = useState("");
 
   const handleSignup = async () => {
-    const res = await fetch("/api/signup", {
+    const handleSubmit = (e) => {
+  e.preventDefault();
+  alert("Registration system coming soon.");
+};  {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
