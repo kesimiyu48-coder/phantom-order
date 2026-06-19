@@ -5,22 +5,16 @@ export async function POST(req) {
   try {
     const { name, email, password } = await req.json();
 
-    // check if user exists
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
 
     if (existingUser) {
-      return Response.json(
-        { error: "User already exists" },
-        { status: 400 }
-      );
+      return Response.json({ error: "User already exists" }, { status: 400 });
     }
 
-    // hash password (VERY IMPORTANT)
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // create user
     const user = await prisma.user.create({
       data: {
         name,
@@ -30,13 +24,12 @@ export async function POST(req) {
       },
     });
 
-    return Response.json({
-      message: "User created successfully",
-      user,
-    });
-  } catch (error) {
+    return Response.json({ success: true, user });
+  } catch (err) {
+    console.error("SIGNUP ERROR:", err);
+
     return Response.json(
-      { error: "Something went wrong" },
+      { error: "Internal Server Error" },
       { status: 500 }
     );
   }
